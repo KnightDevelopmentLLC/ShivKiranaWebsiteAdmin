@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getFirestore,
+  initializeFirestore,
   collection,
   addDoc,
   deleteDoc,
@@ -19,12 +19,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  useFetchStreams: false,
+});
 
 // EDIT HERE - CLOUDINARY CONFIG
 const CLOUDINARY = {
-  cloud_name: "dfmzotwnn",
-  upload_preset: "shivkirana",
+  cloud_name: "your_cloud_name",
+  upload_preset: "your_unsigned_preset",
 };
 
 const catInput = document.getElementById("catInput");
