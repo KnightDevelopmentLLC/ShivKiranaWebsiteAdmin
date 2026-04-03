@@ -26,8 +26,8 @@ const db = initializeFirestore(app, {
 
 // EDIT HERE - CLOUDINARY CONFIG
 const CLOUDINARY = {
-  cloud_name: "your_cloud_name",
-  upload_preset: "your_unsigned_preset",
+  cloud_name: "dfmzotwnn",
+  upload_preset: "shivkirana",
 };
 
 const catInput = document.getElementById("catInput");
