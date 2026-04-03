@@ -20,7 +20,7 @@ const db = getFirestore(app);
 // EDIT HERE - SHOP NAME
 const SHOP_NAME = "Shiv Kirana";
 // EDIT HERE - WHATSAPP NUMBER
-const WHATSAPP_NUMBER = "919999999999";
+const WHATSAPP_NUMBER = "919162913553";
 
 document.querySelector(".brand").textContent = SHOP_NAME;
 document.title = `${SHOP_NAME} | Fresh Grocery`;
