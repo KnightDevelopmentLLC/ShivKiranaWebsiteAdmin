@@ -6,8 +6,6 @@ import {
   deleteDoc,
   doc,
   serverTimestamp,
-  query,
-  orderBy,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -25,12 +23,13 @@ const db = getFirestore(app);
 
 // EDIT HERE - CLOUDINARY CONFIG
 const CLOUDINARY = {
-  cloud_name: "dfmzotwnn",
-  upload_preset: "shivkirana",
+  cloud_name: "your_cloud_name",
+  upload_preset: "your_unsigned_preset",
 };
 
 const catInput = document.getElementById("catInput");
 const categoryList = document.getElementById("categoryList");
+const categoryStatusEl = document.getElementById("categoryStatus");
 const catSelect = document.getElementById("pCategory");
 const statusEl = document.getElementById("adminStatus");
 const productRows = document.getElementById("productRows");
@@ -89,15 +88,30 @@ function renderProducts() {
 
 document.getElementById("addCategory").addEventListener("click", async () => {
   const name = catInput.value.trim();
-  if (!name) return;
-  await addDoc(collection(db, "categories"), { name, createdAt: serverTimestamp() });
-  catInput.value = "";
+  if (!name) {
+    categoryStatusEl.textContent = "Please enter a category name.";
+    return;
+  }
+  try {
+    categoryStatusEl.textContent = "Saving category...";
+    await addDoc(collection(db, "categories"), { name, createdAt: serverTimestamp() });
+    catInput.value = "";
+    categoryStatusEl.textContent = "Category added.";
+  } catch (err) {
+    categoryStatusEl.textContent = `Category save failed: ${err.message}`;
+  }
 });
 
 categoryList.addEventListener("click", async (e) => {
   const id = e.target.dataset.delCat;
   if (!id) return;
-  await deleteDoc(doc(db, "categories", id));
+  try {
+    categoryStatusEl.textContent = "Deleting category...";
+    await deleteDoc(doc(db, "categories", id));
+    categoryStatusEl.textContent = "Category deleted.";
+  } catch (err) {
+    categoryStatusEl.textContent = `Category delete failed: ${err.message}`;
+  }
 });
 
 document.getElementById("addProduct").addEventListener("click", async () => {
@@ -136,15 +150,37 @@ document.getElementById("addProduct").addEventListener("click", async () => {
 productRows.addEventListener("click", async (e) => {
   const id = e.target.dataset.delProduct;
   if (!id) return;
-  await deleteDoc(doc(db, "products", id));
+  try {
+    statusEl.textContent = "Deleting product...";
+    await deleteDoc(doc(db, "products", id));
+    statusEl.textContent = "Product deleted.";
+  } catch (err) {
+    statusEl.textContent = `Product delete failed: ${err.message}`;
+  }
 });
 
-onSnapshot(query(collection(db, "categories"), orderBy("createdAt", "asc")), (snap) => {
-  state.categories = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  renderCategories();
-});
+onSnapshot(
+  collection(db, "categories"),
+  (snap) => {
+    state.categories = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+    renderCategories();
+  },
+  (err) => {
+    categoryStatusEl.textContent = `Categories load failed: ${err.message}`;
+  }
+);
 
-onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), (snap) => {
-  state.products = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  renderProducts();
-});
+onSnapshot(
+  collection(db, "products"),
+  (snap) => {
+    state.products = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    renderProducts();
+  },
+  (err) => {
+    statusEl.textContent = `Products load failed: ${err.message}`;
+  }
+);
