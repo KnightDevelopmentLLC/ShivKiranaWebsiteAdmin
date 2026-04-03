@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shiv Kirana | Fresh Grocery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="brand">Shiv Kirana</div>
+      <label class="search-box">
+        <input id="searchInput" placeholder="Search for groceries..." />
+      </label>
+      <button id="cartToggle" class="icon-btn" aria-label="Open cart">🛒 <span class="badge" id="cartBadge">0</span></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h3>Categories</h3>
+      <div id="categories" class="pills"></div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <h3>Products</h3>
+      <div id="productGrid" class="grid"></div>
+    </section>
+  </main>
+
+  <aside id="cartDrawer" class="drawer">
+    <div class="drawer-head" style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>Your Cart</strong>
+      <button id="closeCart" class="btn btn-soft">Close</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="drawer-foot">
+      <div style="display:flex;justify-content:space-between;align-items:center; margin-bottom:0.7rem;">
+        <strong>Total</strong>
+        <strong id="cartTotal">₹0</strong>
+      </div>
+      <button id="checkoutBtn" class="btn btn-primary" style="width:100%;">Checkout on WhatsApp</button>
+    </div>
+  </aside>
+
+  <div id="overlay" class="overlay"></div>
+
+  <section id="checkoutModal" class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+      <h3 style="margin:0;">Checkout Details</h3>
+      <button id="closeModal" class="btn btn-soft">Close</button>
+    </div>
+    <div class="form-grid">
+      <input id="cName" class="input" placeholder="Your Name" />
+      <input id="cPhone" class="input" placeholder="Phone Number" />
+      <textarea id="cAddress" class="input" rows="3" placeholder="Delivery Address"></textarea>
+      <button id="placeOrder" class="btn btn-primary">Send Order on WhatsApp</button>
+    </div>
+  </section>
+
+  <button id="chatToggle" class="chatbot-btn" aria-label="Open chatbot">💬</button>
+  <section id="chatbox" class="chatbox">
+    <strong>Shiv Kirana Assistant</strong>
+    <button class="btn btn-soft chat-option" data-action="products">View Products</button>
+    <button class="btn btn-soft chat-option" data-action="order">Order Help</button>
+    <button class="btn btn-soft chat-option" data-action="delivery">Delivery Info</button>
+    <button class="btn btn-soft chat-option" data-action="contact">Contact</button>
+    <p id="chatResponse" class="muted" style="margin:0.7rem 0 0;"></p>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
