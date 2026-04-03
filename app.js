@@ -2,8 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getFirestore,
   collection,
-  query,
-  orderBy,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -22,7 +20,7 @@ const db = getFirestore(app);
 // EDIT HERE - SHOP NAME
 const SHOP_NAME = "Shiv Kirana";
 // EDIT HERE - WHATSAPP NUMBER
-const WHATSAPP_NUMBER = "919162913553";
+const WHATSAPP_NUMBER = "919999999999";
 
 document.querySelector(".brand").textContent = SHOP_NAME;
 document.title = `${SHOP_NAME} | Fresh Grocery`;
@@ -192,15 +190,31 @@ Address: ${address}`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(rawMessage)}`;
 }
 
-onSnapshot(query(collection(db, "categories"), orderBy("createdAt", "asc")), (snap) => {
-  state.categories = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  renderCategories();
-});
+onSnapshot(
+  collection(db, "categories"),
+  (snap) => {
+    state.categories = snap.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+    renderCategories();
+  },
+  (err) => {
+    categoriesEl.innerHTML = `<p class="muted">Could not load categories: ${err.message}</p>`;
+  }
+);
 
-onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), (snap) => {
-  state.products = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  renderProducts();
-});
+onSnapshot(
+  collection(db, "products"),
+  (snap) => {
+    state.products = snap.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    renderProducts();
+  },
+  (err) => {
+    gridEl.innerHTML = `<p class="muted">Could not load products: ${err.message}</p>`;
+  }
+);
 
 categoriesEl.addEventListener("click", (e) => {
   const btn = e.target.closest(".pill");
