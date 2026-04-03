@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getFirestore,
+  initializeFirestore,
   collection,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -15,12 +15,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  useFetchStreams: false,
+});
 
 // EDIT HERE - SHOP NAME
 const SHOP_NAME = "Shiv Kirana";
 // EDIT HERE - WHATSAPP NUMBER
-const WHATSAPP_NUMBER = "919162913553";
+const WHATSAPP_NUMBER = "919999999999";
 
 document.querySelector(".brand").textContent = SHOP_NAME;
 document.title = `${SHOP_NAME} | Fresh Grocery`;
